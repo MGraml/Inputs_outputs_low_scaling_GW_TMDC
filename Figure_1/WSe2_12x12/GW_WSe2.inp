@@ -1,0 +1,123 @@
+&GLOBAL
+  PROJECT  MoS2
+  PRINT_LEVEL MEDIUM
+  RUN_TYPE ENERGY
+  &TIMINGS
+     THRESHOLD 0.01
+  &END
+&END GLOBAL
+&FORCE_EVAL
+  METHOD Quickstep
+  &DFT
+    BASIS_SET_FILE_NAME  BASIS_MOLOPT
+    BASIS_SET_FILE_NAME  BASIS_MOLOPT_UZH
+    BASIS_SET_FILE_NAME  BASIS_MOLOPT_UCL
+    BASIS_SET_FILE_NAME  /home/atuin/b165da/b165da10/04_WSe2/BASIS_WSe
+    BASIS_SET_FILE_NAME  /home/atuin/b165da/b165da10/04_WSe2/BASIS_MoS
+    BASIS_SET_FILE_NAME  /home/atuin/b165da/b165da10/04_WSe2/BASIS_SET_MoS_MOLOPT_robust
+    SORT_BASIS EXP
+    POTENTIAL_FILE_NAME  GTH_POTENTIALS
+    CHARGE 0
+    &MGRID
+      CUTOFF  500
+      REL_CUTOFF  100
+    &END MGRID
+    &QS
+      METHOD GPW
+      EPS_DEFAULT 1.0E-40
+      EPS_PGF_ORB 1.0E-40
+    &END QS
+    &SCF
+      SCF_GUESS RESTART
+      EPS_SCF 1.0E-9
+      MAX_SCF 100
+      &PRINT
+        &RESTART ON
+        &END
+      &END
+      ADDED_MOS -1
+      &MIXING
+          METHOD BROYDEN_MIXING
+          ALPHA 0.1
+          BETA 1.5
+          NBROYDEN 8
+      &END
+    &END SCF
+    &XC
+      &XC_FUNCTIONAL LDA
+      &END XC_FUNCTIONAL
+      &WF_CORRELATION
+        &LOW_SCALING
+          KPOINTS                 4 4 1
+          EPS_FILTER              1.0E-6
+          MEMORY_CUT              3
+          REGULARIZATION_RI       1.0E-2
+        &END LOW_SCALING
+        &RI
+          &RI_METRIC
+            POTENTIAL_TYPE TRUNCATED
+            CUTOFF_RADIUS  3.0
+          &END RI_METRIC
+        &END RI
+        &RI_RPA
+          RPA_NUM_QUAD_POINTS  10
+          &GW
+           CORR_OCC   200
+           CORR_VIRT  200
+           RI_SIGMA_X
+           KPOINTS_SELF_ENERGY 8 8 1
+!           &PRINT
+!             &LOCAL_BANDGAP
+!                ENERGY_WINDOW 2.0
+!                ENERGY_SPACING 0.02
+!                LDOS_THRESHOLD_GAP 0.03
+!                STRIDE 1 1 1
+!             &END LOCAL_BANDGAP
+!           &END PRINT
+          &END GW
+        &END RI_RPA
+      &END
+    &END XC
+!    &PRINT
+!      &MO
+!        EIGENVALUES
+!      &END MO
+!    &END PRINT
+  &END DFT
+  &SUBSYS
+    &CELL
+        ABC                3.319 3.319 15.0
+        ALPHA_BETA_GAMMA   90 90 120
+        PERIODIC XY
+        MULTIPLE_UNIT_CELL 12 12 1
+    &END CELL
+    &TOPOLOGY
+      MULTIPLE_UNIT_CELL 12 12 1
+    &END TOPOLOGY
+    &KIND Mo
+      BASIS_SET ORB    TZVP-MOLOPT-SR-GTH_robust_12
+      BASIS_SET RI_AUX def2-SVP-RIFIT-mod-2
+      POTENTIAL        GTH-PADE-q14
+    &END KIND
+    &KIND S
+      BASIS_SET ORB    TZVP-MOLOPT-GTH_robust_9
+      BASIS_SET RI_AUX def2-SVP-RIFIT-mod-1
+      POTENTIAL        GTH-PADE-q6
+    &END KIND
+    &KIND W
+      BASIS_SET ORB    TZVP-MOLOPT-SR-GTH_robust_1
+      BASIS_SET RI_AUX def2-SVP-RIFIT-mod-3
+      POTENTIAL        GTH-PADE-q14
+    &END KIND
+    &KIND Se
+      BASIS_SET ORB    TZVP-MOLOPT-SR-GTH
+      BASIS_SET RI_AUX def2-SVP-RIFIT-mod-3
+      POTENTIAL        GTH-PADE-q6
+    &END KIND
+    &COORD
+       W 0.0 0.0 2.1792764
+       Se 1.65950331 0.95811468 3.8585528
+       Se 1.65950331 0.95811468 0.5
+    &END COORD
+  &END SUBSYS
+&END FORCE_EVAL
