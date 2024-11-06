@@ -22,14 +22,14 @@ for root, dirs, files in os.walk(start_dir):
                         break  # Stop after finding the project name
         
         elif file.endswith('.inp'):
-            # If name has already project name, skip
-            if project_name in file:
-                break
             # Store the .inp file name for renaming later
             inp_file = file
     
     # Rename the .inp file if both inp_file and project_name were found
     if inp_file and project_name:
+        # If name has already project name, skip
+        if project_name in file:
+            break
         old_inp_path = os.path.join(root, inp_file)
         new_inp_name = f"{os.path.splitext(inp_file)[0]}_{project_name}.inp"
         new_inp_path = os.path.join(root, new_inp_name)
